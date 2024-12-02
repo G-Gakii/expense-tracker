@@ -1,0 +1,58 @@
+<div class="container">
+  <h2 class="text-center">Expense form</h2>
+  <form [formGroup]="expenseForm" (submit)="AddExpense()">
+    <div class="mb-3">
+      <label for="amount" class="form-label">Amount</label>
+      <input
+        type="number"
+        class="form-control"
+        name="amount"
+        id="amount"
+        formControlName="amount"
+      />
+    </div>
+    <div class="text-danger">
+      @if ((expenseForm.get('amount')?.hasError('required'))&&
+      (expenseForm.get('amount')?.touched)) {
+      <p>Amount required</p>
+      }
+    </div>
+    <div class="mb-3">
+      <select
+        class="form-select"
+        formControlName="category"
+        aria-label="Default select example"
+      >
+        <option selected>Category</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Utilities">Utilities</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Travel">Travel</option>
+        <option value="MembershipAndSubscription">
+          MembershipAndSubscription
+        </option>
+        <option value="Toiletries">Toiletries</option>
+      </select>
+    </div>
+    <div class="text-danger">
+      @if ((expenseForm.get('category')?.hasError('required'))&&
+      (expenseForm.get('category')?.touched)) {
+      <p>Category required</p>
+      }
+    </div>
+    <div class="form-floating">
+      <textarea
+        class="form-control"
+        name="description"
+        id="description"
+        formControlName="description"
+      ></textarea>
+      <label for="floatingTextarea">Describe expense</label>
+    </div>
+    <div class="text-center mt-5">
+      <button type="submit" class="btn btn-primary">
+        @if (isEdit) { Edit Expense } @else { Add Expense }
+      </button>
+    </div>
+  </form>
+</div>
