@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="part1 d-flex justify-content-center mb-3">
+    <h3 class="text-success">Balance : {{ balance() | currency }}</h3>
+  </div>
+  <div class="box d-flex justify-content-between">
+    <div class="box-income shadow p-3 w-50 text-center m-1">
+      @if(myBudget.length >0 ){
+      <p>
+        Budget
+        <span (click)="EditBudgetAmount(budget)" class="ms-2">
+          <fa-icon [icon]="faPen"></fa-icon
+        ></span>
+      </p>
+
+      <p class="text-success">{{ budget | currency }}</p>
+      } @else {
+      <a class="text-decoration-none" href="/budget-form">Add Budget Amount</a>
+      }
+    </div>
+    <div class="box-expense p-3 shadow w-50 text-center m-1">
+      <p>Expense</p>
+      <p class="text-danger">{{ totalAmount | currency }}</p>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ExpenseService } from '../../../shared/expense.service';
 import { Expense } from '../../../interface/expense';
 import { Router, RouterLink } from '@angular/router';
@@ -7,12 +7,13 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-expense-display',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './expense-display.component.html',
   styleUrl: './expense-display.component.scss',
 })
 export class ExpenseDisplayComponent implements OnInit {
   expenses: Expense[] = [];
+
   expenseForm!: FormGroup;
   totalAmount: number = 1;
 
@@ -63,5 +64,6 @@ export class ExpenseDisplayComponent implements OnInit {
       const amount = expense.amount || 0;
       return total + amount;
     }, 0);
+    this.expenseService.totalexpense.set(this.totalAmount);
   }
 }

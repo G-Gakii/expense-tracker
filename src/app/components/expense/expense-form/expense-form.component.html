@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-4">
   <h2 class="text-center">Expense form</h2>
   <form [formGroup]="expenseForm" (submit)="AddExpense()">
     <div class="mb-3">
@@ -9,6 +9,7 @@
         name="amount"
         id="amount"
         formControlName="amount"
+        placeholder="Enter amount spent"
       />
     </div>
     <div class="text-danger">
@@ -23,7 +24,7 @@
         formControlName="category"
         aria-label="Default select example"
       >
-        <option selected>Category</option>
+        <option selected disabled>Category</option>
         <option value="Groceries">Groceries</option>
         <option value="Utilities">Utilities</option>
         <option value="Entertainment">Entertainment</option>
@@ -50,7 +51,7 @@
       <label for="floatingTextarea">Describe expense</label>
     </div>
     <div class="text-center mt-5">
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-primary w-100 p-3">
         @if (isEdit) { Edit Expense } @else { Add Expense }
       </button>
     </div>

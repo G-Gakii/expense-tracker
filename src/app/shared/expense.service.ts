@@ -16,6 +16,7 @@ export class ExpenseService {
   isEdit = signal(false);
   expenseForm!: FormGroup;
   toUpdateExpenseId = signal('');
+  totalexpense = signal(0);
   constructor(
     private fireAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -24,7 +25,7 @@ export class ExpenseService {
   ) {
     this.expenseForm = fb.group({
       amount: ['', [Validators.required]],
-      category: ['', Validators.required],
+      category: ['Category', Validators.required],
       description: [''],
     });
   }

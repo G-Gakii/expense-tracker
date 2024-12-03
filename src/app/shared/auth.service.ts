@@ -57,7 +57,7 @@ export class AuthService {
                 isOwner: true,
               })
               .then(() => {
-                this.router.navigate(['/expense-display']);
+                this.router.navigate(['/expense']);
               });
           }
         } else {
@@ -102,6 +102,34 @@ export class AuthService {
         this.router.navigate([]);
       },
       (err: any) => {
+        alert(err.message);
+      }
+    );
+  }
+
+  forgotPassword(email: string) {
+    const userRef = this.fireAuth.authState.subscribe((user) => {
+      if (user && user.email === email) {
+        this.fireAuth.sendPasswordResetEmail(email).then(
+          () => {
+            alert('Link to reset password has been sent to your email');
+          },
+          (err) => {
+            err.message;
+          }
+        );
+      } else {
+        alert('Email does not exist');
+      }
+    });
+  }
+
+  logout() {
+    this.fireAuth.signOut().then(
+      () => {
+        this.router.navigate(['/login']);
+      },
+      (err) => {
         alert(err.message);
       }
     );

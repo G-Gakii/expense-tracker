@@ -1,50 +1,48 @@
-<div class="container mt-2">
-  <div class="d-flex justify-content-between">
-    <h1>Transation history</h1>
-    <button routerLink="/expense-form" type="button" class="btn btn-primary">
-      Add Expense
-    </button>
-  </div>
-
-  <table class="table mt-3">
-    <thead>
-      <tr>
-        <th scope="col">Category</th>
-        <th scope="col">Amount</th>
-        <th scope="col">description</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (expense of expenses; track $index) {
-      <tr>
-        <td scope="row">{{ expense.category }}</td>
-        <td>{{ expense.amount }}</td>
-        <td>{{ expense.description }}</td>
-        <td>
-          <button
-            (click)="EditExpense(expense)"
-            type="button"
-            class="btn btn-success"
-          >
-            Edit
-          </button>
-        </td>
-        <td>
-          <button
-            (click)="deleteExpense(expense)"
-            type="button"
-            class="btn btn-danger"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-
-  <div>
-    <p>total : {{ totalAmount }}</p>
+<div class="container">
+  <div class="mt-2">
+    <div class="d-flex justify-content-between">
+      <h1>Transation history</h1>
+    </div>
+    @if (expenses.length===0) {
+    <p>No transation available</p>
+    }@else {
+    <table class="table mt-3">
+      <thead>
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Amount</th>
+          <th scope="col">description</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (expense of expenses; track $index) {
+        <tr>
+          <td scope="row">{{ expense.category }}</td>
+          <td>{{ expense.amount }}</td>
+          <td>{{ expense.description }}</td>
+          <td>
+            <button
+              (click)="EditExpense(expense)"
+              type="button"
+              class="btn btn-success"
+            >
+              Edit
+            </button>
+          </td>
+          <td>
+            <button
+              (click)="deleteExpense(expense)"
+              type="button"
+              class="btn btn-danger"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
   </div>
 </div>

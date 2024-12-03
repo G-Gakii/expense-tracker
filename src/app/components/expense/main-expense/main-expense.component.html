@@ -1,0 +1,18 @@
+<div class="container d-flex justify-content-center p-5">
+  <div>
+    <div class="mb-2 text-end">
+      <button (click)="logout()" class="btn btn-danger">Logout</button>
+    </div>
+    <h1 class="text-center text-primary">Expense Tracker</h1>
+
+    <div class="expense-container d-flex">
+      <div class="part1 mt-3 me-5">
+        <app-budget-display></app-budget-display>
+        <app-expense-form></app-expense-form>
+      </div>
+      <div class="expense">
+        <app-expense-display></app-expense-display>
+      </div>
+    </div>
+  </div>
+</div>

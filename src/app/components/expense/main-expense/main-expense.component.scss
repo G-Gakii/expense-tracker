@@ -1,0 +1,9 @@
+@media screen and (max-width: 600px) {
+  .expense-container {
+    flex-direction: column;
+    width: 100%;
+    .part1 {
+      width: 100%;
+    }
+  }
+}

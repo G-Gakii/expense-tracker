@@ -1,0 +1,26 @@
+<div class="container mb-5">
+  <h1>Budget Form</h1>
+  <form [formGroup]="budgetForm" (submit)="addBudgetAmount()">
+    <div class="mb-3">
+      <label for="budgetAmount" class="form-label">Budget Amount</label>
+      <input
+        type="number"
+        min="0"
+        class="form-control"
+        id="budgetAmount"
+        name="budgetAmount"
+        required
+        autocomplete="on"
+        formControlName="amount"
+        placeholder="Add amount you would wish to spend"
+      />
+    </div>
+    @if(budgetForm.get("amount")?.hasError("required") &&
+    budgetForm.get("amount")?.touched){
+    <p class="text-danger">Amount required</p>
+    }
+    <button type="submit" class="btn btn-primary w-100">
+      @if (isEdit) {Edit Budget} @else { Add your Budget }
+    </button>
+  </form>
+</div>
