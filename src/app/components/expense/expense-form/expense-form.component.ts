@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,11 +20,14 @@ export class ExpenseFormComponent implements OnInit {
   isEdit!: boolean;
   myId!: string;
 
-  constructor(private expense: ExpenseService) {}
+  constructor(private expense: ExpenseService) {
+    effect(() => {
+      this.isEdit = expense.isEdit();
+      this.myId = this.expense.toUpdateExpenseId();
+    });
+  }
   ngOnInit(): void {
     this.expenseForm = this.expense.expenseForm;
-    this.isEdit = this.expense.isEdit();
-    this.myId = this.expense.toUpdateExpenseId();
   }
 
   AddExpense() {

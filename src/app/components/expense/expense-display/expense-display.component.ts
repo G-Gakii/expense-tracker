@@ -51,13 +51,13 @@ export class ExpenseDisplayComponent implements OnInit {
 
   EditExpense(expense: Expense) {
     this.expenseService.isEdit.set(true);
+
     this.expenseService.toUpdateExpenseId.set(expense.id);
     this.expenseForm.patchValue({
       category: expense.category,
       description: expense.description,
       amount: expense.amount,
     });
-    this.router.navigate(['/expense-form']);
   }
   totalExpense() {
     this.totalAmount = this.expenses.reduce((total, expense) => {
