@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { ExpenseService } from '../../../shared/expense.service';
 import { Expense } from '../../../interface/expense';
 import { Router, RouterLink } from '@angular/router';
@@ -13,30 +13,21 @@ import { FormGroup } from '@angular/forms';
 })
 export class ExpenseDisplayComponent implements OnInit {
   expenses: Expense[] = [];
+  length = 0;
 
   expenseForm!: FormGroup;
   totalAmount: number = 1;
 
-  constructor(private expenseService: ExpenseService, private router: Router) {}
-  ngOnInit(): void {
-    this.getUserExpenses();
-    this.expenseForm = this.expenseService.expenseForm;
-  }
+  constructor(private expenseService: ExpenseService, private router: Router) {
+    this.expenseService.getUserExpenses();
+    effect(() => {
+      this.expenses = this.expenseService.myExpense();
 
-  getUserExpenses() {
-    this.expenseService.getALLExpenses().subscribe(
-      (res) => {
-        this.expenses = res.map((e: any) => {
-          const data = e.payload.doc.data();
-          data.id = e.payload.doc.id;
-          return data;
-        });
-        this.totalExpense();
-      },
-      (err) => {
-        alert(err.message);
-      }
-    );
+      this.length = this.expenses.length;
+    });
+  }
+  ngOnInit(): void {
+    this.expenseForm = this.expenseService.expenseForm;
   }
 
   deleteExpense(expense: Expense) {
@@ -58,12 +49,5 @@ export class ExpenseDisplayComponent implements OnInit {
       description: expense.description,
       amount: expense.amount,
     });
-  }
-  totalExpense() {
-    this.totalAmount = this.expenses.reduce((total, expense) => {
-      const amount = expense.amount || 0;
-      return total + amount;
-    }, 0);
-    this.expenseService.totalexpense.set(this.totalAmount);
   }
 }

@@ -47,4 +47,11 @@ export const routes: Routes = [
         './components/budget/budget-display/budget-display.component'
       ).then((c) => c.BudgetDisplayComponent),
   },
+  {
+    path: 'mychart',
+    loadComponent: () =>
+      import('./components/chart/mychart/mychart.component').then(
+        (c) => c.MychartComponent
+      ),
+  },
 ];

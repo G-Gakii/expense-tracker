@@ -5,7 +5,7 @@ import {
   DocumentChangeAction,
 } from '@angular/fire/compat/firestore';
 import { Expense } from '../interface/expense';
-import { map, Observable, of, switchMap, take } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -13,10 +13,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   providedIn: 'root',
 })
 export class ExpenseService {
+  myExpense = signal<Expense[]>([]);
+  expenses: Expense[] = [];
   isEdit = signal(false);
   expenseForm!: FormGroup;
   toUpdateExpenseId = signal('');
   totalexpense = signal(0);
+  private $categoryWithTotalAmount = new BehaviorSubject({});
   constructor(
     private fireAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -43,6 +46,47 @@ export class ExpenseService {
         }
       })
     );
+  }
+
+  getUserExpenses() {
+    this.getALLExpenses().subscribe(
+      (res) => {
+        this.expenses = res.map((e: any) => {
+          const data = e.payload.doc.data();
+          data.id = e.payload.doc.id;
+
+          return data;
+        });
+        this.myExpense.set(this.expenses);
+        this.totalExpense();
+        this.totalExpensePerCategory();
+      },
+      (err) => {
+        alert(err.message);
+      }
+    );
+  }
+
+  private totalExpense() {
+    const totalAmount = this.expenses.reduce((total, expense) => {
+      const amount = expense.amount || 0;
+      return total + amount;
+    }, 0);
+    this.totalexpense.set(totalAmount);
+  }
+
+  private totalExpensePerCategory() {
+    const categoryTotals: { [key: string]: number } = {};
+
+    this.expenses.forEach((expense) => {
+      if (expense.category && expense.amount) {
+        if (!categoryTotals[expense.category]) {
+          categoryTotals[expense.category] = 0;
+        }
+        categoryTotals[expense.category] += expense.amount;
+      }
+      this.updateTotalExpensePerCategory(categoryTotals);
+    });
   }
 
   addExpense(expense: Expense) {
@@ -102,5 +146,12 @@ export class ExpenseService {
           );
       }
     });
+  }
+  updateTotalExpensePerCategory(categoryTotals: { [key: string]: number }) {
+    this.$categoryWithTotalAmount.next(categoryTotals);
+  }
+
+  getTotalExpensePerCategory() {
+    return this.$categoryWithTotalAmount.asObservable();
   }
 }

@@ -16,6 +16,7 @@ import { AuthService } from '../../../shared/auth.service';
 })
 export class RegisterComponent {
   userForm!: FormGroup;
+  registerUser = false;
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.userForm = fb.group({
@@ -31,16 +32,16 @@ export class RegisterComponent {
   }
 
   register() {
+    this.registerUser = true;
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
+      this.registerUser = false;
       return;
     }
     const email = this.userForm.get('email')?.value;
     const password = this.userForm.get('password')?.value;
 
     this.auth.registerUser(email, password);
-  }
-  googleSignIn() {
-    this.auth.googleSignIn();
+    this.registerUser = false;
   }
 }
