@@ -2,6 +2,9 @@
   <h2 class="mt-5 text-center mb-4 text-primary">Login Form</h2>
   <div class="card p-4">
     <div class="card-body">
+      @if (errorMsg) {
+      <p class="text-danger fs-5 mb-2 text-center">{{ errorMsg }}</p>
+      }
       <form [formGroup]="userForm" (submit)="login()">
         <div class="mb-3 fs-5">
           <label for="email" class="form-label">Email address</label>
@@ -50,7 +53,7 @@
         >
         <div class="text-center">
           <button type="submit" class="btn btn-primary w-100 fs-5 mt-4 p-2">
-            @if (isLogging()) {<span>isLogging...</span>} @else { Login }
+            @if (isLogging) {<span>Logging...</span>} @else { Login }
           </button>
         </div>
       </form>

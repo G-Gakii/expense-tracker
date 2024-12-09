@@ -1,26 +1,31 @@
 <div class="container mb-5">
-  <h1>Budget Form</h1>
-  <form [formGroup]="budgetForm" (submit)="addBudgetAmount()">
-    <div class="mb-3">
-      <label for="budgetAmount" class="form-label">Budget Amount</label>
-      <input
-        type="number"
-        min="0"
-        class="form-control"
-        id="budgetAmount"
-        name="budgetAmount"
-        required
-        autocomplete="on"
-        formControlName="amount"
-        placeholder="Add amount you would wish to spend"
-      />
+  <h1 class="text-primary text-center">Budget Form</h1>
+  <div class="card p-3">
+    <div class="card-body">
+      <form [formGroup]="budgetForm" (submit)="addBudgetAmount()">
+        <div class="mb-3 fs-5">
+          <label for="budgetAmount" class="form-label">Budget Amount</label>
+          <input
+            type="number"
+            min="0"
+            class="form-control fs-5"
+            id="budgetAmount"
+            name="budgetAmount"
+            required
+            autocomplete="on"
+            formControlName="amount"
+            placeholder="Add amount you would wish to spend"
+          />
+        </div>
+        @if(budgetForm.get("amount")?.hasError("required") &&
+        budgetForm.get("amount")?.touched){
+        <p class="text-danger">Amount required</p>
+        }
+        <button type="submit" class="btn btn-primary w-100 fs-5 mt-3">
+          @if (isEdit) {Edit Budget} @else if(isEdit && adding){Editing....}
+          @else if (adding) {Adding....} @else { Add your Budget }
+        </button>
+      </form>
     </div>
-    @if(budgetForm.get("amount")?.hasError("required") &&
-    budgetForm.get("amount")?.touched){
-    <p class="text-danger">Amount required</p>
-    }
-    <button type="submit" class="btn btn-primary w-100">
-      @if (isEdit) {Edit Budget} @else { Add your Budget }
-    </button>
-  </form>
+  </div>
 </div>

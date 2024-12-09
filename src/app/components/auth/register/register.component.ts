@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -16,9 +16,13 @@ import { AuthService } from '../../../shared/auth.service';
 })
 export class RegisterComponent {
   userForm!: FormGroup;
-  registerUser = false;
-
+  registerUser!: boolean;
+ 
   constructor(private fb: FormBuilder, private auth: AuthService) {
+    effect(() => {
+      this.registerUser = auth.isregister();
+     
+    });
     this.userForm = fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: [
@@ -32,16 +36,14 @@ export class RegisterComponent {
   }
 
   register() {
-    this.registerUser = true;
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
-      this.registerUser = false;
+
       return;
     }
     const email = this.userForm.get('email')?.value;
     const password = this.userForm.get('password')?.value;
 
     this.auth.registerUser(email, password);
-    this.registerUser = false;
   }
 }

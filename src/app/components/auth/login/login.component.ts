@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,8 +17,8 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
   userForm!: FormGroup;
-  isLogging = signal(false);
-
+  isLogging!: boolean;
+  errorMsg = '';
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.userForm = fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -30,23 +30,20 @@ export class LoginComponent {
         ],
       ],
     });
+    effect(() => {
+      this.isLogging = auth.isLogging();
+      this.errorMsg = auth.loggingErrMsg();
+    });
   }
   login() {
-    console.log(this.isLogging());
-
-    this.isLogging.set(true);
-    console.log(this.isLogging());
-
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
-      this.isLogging.set(false);
+
       return;
     }
     const email = this.userForm.get('email')?.value;
     const password = this.userForm.get('password')?.value;
 
     this.auth.logInUser(email, password);
-    this.isLogging.set(false);
-    console.log(this.isLogging());
   }
 }

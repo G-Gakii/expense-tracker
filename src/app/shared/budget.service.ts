@@ -12,11 +12,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class BudgetService {
   budgetForm!: FormGroup;
   budgetId = signal('');
-  // = new FormGroup({
-  //   amount: new FormControl([Validators.required, Validators.min(0)]),
-  // });
+
   myBudget = signal(0);
   isEdit = signal(false);
+  addingBudget = signal(false);
   constructor(
     private fireAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -29,34 +28,40 @@ export class BudgetService {
   }
 
   AddBudget(budget: Budget) {
-    this.fireAuth.authState.subscribe((user) => {
-      if (user) {
-        this.afs
-          .collection('budget', (ref) => ref.where('owner', '==', user.uid))
-          .snapshotChanges()
-          .pipe(take(1))
-          .subscribe((existingBudget) => {
-            if (existingBudget.length === 0) {
-              budget.owner = user.uid;
-              budget.id = this.afs.createId();
-              this.afs
-                .collection('budget')
-                .add(budget)
-                .then(
-                  () => {
-                    alert('Amount added successfully');
-                    this.router.navigate(['/expense']);
-                  },
-                  (err) => {
-                    alert(err.message);
-                  }
-                );
-            } else {
-              alert('you already have a budget');
-            }
-          });
-      }
-    });
+    this.addingBudget.set(true);
+    try {
+      this.fireAuth.authState.subscribe((user) => {
+        if (user) {
+          this.afs
+            .collection('budget', (ref) => ref.where('owner', '==', user.uid))
+            .snapshotChanges()
+            .pipe(take(1))
+            .subscribe((existingBudget) => {
+              if (existingBudget.length === 0) {
+                budget.owner = user.uid;
+                budget.id = this.afs.createId();
+                this.afs
+                  .collection('budget')
+                  .add(budget)
+                  .then(
+                    () => {
+                      this.router.navigate(['/expense']);
+                    },
+                    (err) => {
+                      alert(err.message);
+                    }
+                  );
+              } else {
+                alert('you already have a budget');
+              }
+            });
+        }
+      });
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      this.addingBudget.set(false);
+    }
   }
   getBudget() {
     return this.fireAuth.authState.pipe(
@@ -81,7 +86,6 @@ export class BudgetService {
           .update(updateBudget)
           .then(
             () => {
-              alert('updated successfully');
               this.router.navigate(['/expense']);
             },
             (err) => {

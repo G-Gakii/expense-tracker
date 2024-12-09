@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { Component, effect, viewChild } from '@angular/core';
 import { BudgetService } from '../../../shared/budget.service';
 import {
   FormControl,
@@ -21,11 +21,15 @@ export class BudgetComponent {
   budgetForm!: FormGroup;
   isEdit!: boolean;
   myId!: string;
+  adding!: boolean;
 
   constructor(private budgetService: BudgetService) {
     this.budgetForm = budgetService.budgetForm;
     this.isEdit = budgetService.isEdit();
     this.myId = budgetService.budgetId();
+    effect(() => {
+      this.adding = budgetService.addingBudget();
+    });
   }
 
   addBudgetAmount() {

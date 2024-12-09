@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GoogleAuthProvider } from 'firebase/auth';
@@ -9,19 +9,25 @@ import { __await } from 'tslib';
   providedIn: 'root',
 })
 export class AuthService {
+  isLogging = signal(false);
+  isregister = signal(false);
+  loggingErrMsg = signal('');
+
   constructor(
     private fireAuth: AngularFireAuth,
     private router: Router,
     private afs: AngularFirestore
   ) {}
   async registerUser(email: string, password: string) {
+    this.isregister.set(true);
     try {
       const res = await this.fireAuth.createUserWithEmailAndPassword(
         email,
         password
       );
       if (res.user) {
-        alert('Registered Successfully. Kindly verify your email');
+        alert('Registered Successfully. Kindly verify your email to login');
+
         await this.sendEmailVerification(res.user);
         await this.afs.collection('users').doc(res.user.uid).set({
           email: email,
@@ -32,15 +38,19 @@ export class AuthService {
     } catch (error: any) {
       alert(error.message);
       this.router.navigate(['/register']);
+    } finally {
+      this.isregister.set(false);
     }
   }
 
   async logInUser(email: string, password: string) {
+    this.isLogging.set(true);
     try {
       const res = await this.fireAuth.signInWithEmailAndPassword(
         email,
         password
       );
+
       if (res.user) {
         localStorage.setItem('token', 'true');
         if (res.user.emailVerified) {
@@ -48,13 +58,17 @@ export class AuthService {
             email: email,
             isOwner: true,
           });
+
           this.router.navigate(['/expense']);
         } else {
           alert('Please verify your email first');
+          return;
         }
       }
     } catch (error: any) {
-      alert(error.message);
+      this.loggingErrMsg.set('Invalid credentials');
+    } finally {
+      this.isLogging.set(false);
     }
   }
 

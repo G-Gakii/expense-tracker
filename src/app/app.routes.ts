@@ -4,6 +4,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { ExpenseDisplayComponent } from './components/expense/expense-display/expense-display.component';
 import { ExpenseFormComponent } from './components/expense/expense-form/expense-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { MainExpenseComponent } from './components/expense/main-expense/main-expense.component';
 
 export const routes: Routes = [
   {
@@ -40,13 +41,7 @@ export const routes: Routes = [
         (c) => c.BudgetComponent
       ),
   },
-  {
-    path: 'budget-display',
-    loadComponent: () =>
-      import(
-        './components/budget/budget-display/budget-display.component'
-      ).then((c) => c.BudgetDisplayComponent),
-  },
+
   {
     path: 'mychart',
     loadComponent: () =>
