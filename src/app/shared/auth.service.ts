@@ -28,12 +28,23 @@ export class AuthService {
       if (res.user) {
         alert('Registered Successfully. Kindly verify your email to login');
 
-        await this.sendEmailVerification(res.user);
-        await this.afs.collection('users').doc(res.user.uid).set({
-          email: email,
-          isOwner: true,
-        });
-        this.router.navigate(['login']);
+        const sendEmailVerificationPromise = this.sendEmailVerification(
+          res.user
+        );
+        const userRef = this.afs.collection('users').doc(res.user.uid);
+        const updateUser = userRef.set(
+          {
+            email: email,
+            isOwner: true,
+          },
+          { merge: true }
+        );
+        const navigatePromise = this.router.navigate(['login']);
+        await Promise.all([
+          sendEmailVerificationPromise,
+          updateUser,
+          navigatePromise,
+        ]);
       }
     } catch (error: any) {
       alert(error.message);
@@ -54,12 +65,13 @@ export class AuthService {
       if (res.user) {
         localStorage.setItem('token', 'true');
         if (res.user.emailVerified) {
-          await this.afs.collection('users').doc(res.user.uid).set({
-            email: email,
-            isOwner: true,
-          });
-
-          this.router.navigate(['/expense']);
+          const userRef = this.afs.collection('users').doc(res.user.uid);
+          const updatePromise = userRef.set(
+            { email: email, isOwner: true },
+            { merge: true }
+          );
+          const navigatePromise = this.router.navigate(['/expense']);
+          await Promise.all([updatePromise, navigatePromise]);
         } else {
           alert('Please verify your email first');
           return;
