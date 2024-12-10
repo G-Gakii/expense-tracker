@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, effect, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { ExpenseService } from '../../../shared/expense.service';
 import { Expense } from '../../../interface/expense';
+import { distinctUntilChanged } from 'rxjs';
 Chart.register(...registerables);
 @Component({
   selector: 'app-mychart',
@@ -14,19 +15,21 @@ export class MychartComponent implements OnInit {
   category!: { [key: string]: number };
   labelData: string[] = [];
   categoryData: number[] = [];
-  color: string[] = ['green', 'yellow', 'maroon', 'blue', 'orange', 'pick'];
+  color: string[] = ['green', 'yellow', 'maroon', 'blue', 'orange', 'pink'];
   private mychart: Chart | null = null;
   constructor(private ExpenseService: ExpenseService) {}
   ngOnInit(): void {
     this.ExpenseService.getUserExpenses();
-    this.ExpenseService.getTotalExpensePerCategory().subscribe({
-      next: (item) => {
-        this.category = item;
-        this.labelData = Object.keys(this.category);
-        this.categoryData = Object.values(this.category);
-        this.renderChart(this.labelData, this.categoryData, this.color);
-      },
-    });
+    this.ExpenseService.getTotalExpensePerCategory()
+      .pipe(distinctUntilChanged())
+      .subscribe({
+        next: (item) => {
+          this.category = item;
+          this.labelData = Object.keys(this.category);
+          this.categoryData = Object.values(this.category);
+          this.renderChart(this.labelData, this.categoryData, this.color);
+        },
+      });
   }
 
   renderChart(labelData: string[], categoryData: number[], color: string[]) {
