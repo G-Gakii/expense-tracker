@@ -2,14 +2,15 @@
   <h2 class="text-center mb-3">Expense form</h2>
   <form class="fs-5" [formGroup]="expenseForm" (submit)="AddExpense()">
     <div class="mb-3">
-      <label for="amount" class="form-label">Amount</label>
+      <label for="amount" class="form-label">Enter Amount</label>
       <input
         type="number"
         class="form-control"
         name="amount"
         id="amount"
         formControlName="amount"
-        placeholder="Enter amount spent"
+        placeholder="e.g 10"
+        min="1"
       />
     </div>
     <div class="text-danger">
@@ -48,7 +49,7 @@
         id="description"
         formControlName="description"
       ></textarea>
-      <label for="floatingTextarea">Describe expense</label>
+      <label for="floatingTextarea">Description</label>
     </div>
     <div class="text-center mt-5">
       <button type="submit" class="btn btn-primary w-100 p-3">

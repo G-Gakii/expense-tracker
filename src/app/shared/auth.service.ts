@@ -55,8 +55,8 @@ export class AuthService {
   }
 
   async logInUser(email: string, password: string) {
-    this.isLogging.set(true);
     try {
+      this.isLogging.set(true);
       const res = await this.fireAuth.signInWithEmailAndPassword(
         email,
         password
@@ -72,15 +72,15 @@ export class AuthService {
           );
           const navigatePromise = this.router.navigate(['/expense']);
           await Promise.all([updatePromise, navigatePromise]);
+          this.isLogging.set(false);
         } else {
           alert('Please verify your email first');
+          this.isLogging.set(false);
           return;
         }
       }
     } catch (error: any) {
       this.loggingErrMsg.set('Invalid credentials');
-    } finally {
-      this.isLogging.set(false);
     }
   }
 
