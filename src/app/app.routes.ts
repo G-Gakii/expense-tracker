@@ -5,6 +5,7 @@ import { ExpenseDisplayComponent } from './components/expense/expense-display/ex
 import { ExpenseFormComponent } from './components/expense/expense-form/expense-form.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { MainExpenseComponent } from './components/expense/main-expense/main-expense.component';
+import { AuthGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,7 @@ export const routes: Routes = [
       import('./components/expense/main-expense/main-expense.component').then(
         (c) => c.MainExpenseComponent
       ),
+    canActivate: [AuthGuard],
   },
 
   {
@@ -40,6 +42,7 @@ export const routes: Routes = [
       import('./components/budget/budget/budget.component').then(
         (c) => c.BudgetComponent
       ),
+    canActivate: [AuthGuard],
   },
 
   {
@@ -48,5 +51,6 @@ export const routes: Routes = [
       import('./components/chart/mychart/mychart.component').then(
         (c) => c.MychartComponent
       ),
+    canActivate: [AuthGuard],
   },
 ];

@@ -103,7 +103,9 @@ export class AuthService {
       alert('Email does not exist');
     }
   }
-
+  isLogged(): boolean {
+    return localStorage.getItem('token') === 'true';
+  }
   logout() {
     this.fireAuth.signOut().then(
       () => {
