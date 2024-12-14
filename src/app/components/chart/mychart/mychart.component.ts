@@ -21,15 +21,14 @@ export class MychartComponent implements OnInit {
   ngOnInit(): void {
     this.ExpenseService.getUserExpenses();
     this.ExpenseService.getTotalExpensePerCategory()
-      .pipe(distinctUntilChanged())
-      .subscribe({
-        next: (item) => {
-          this.category = item;
-          this.labelData = Object.keys(this.category);
-          this.categoryData = Object.values(this.category);
-          this.renderChart(this.labelData, this.categoryData, this.color);
-        },
-      });
+    .subscribe({
+      next: (item) => {
+        this.category = item;
+        this.labelData = Object.keys(this.category);
+        this.categoryData = Object.values(this.category);
+        this.renderChart(this.labelData, this.categoryData, this.color);
+      },
+    });
   }
 
   renderChart(labelData: string[], categoryData: number[], color: string[]) {
